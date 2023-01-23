@@ -36,7 +36,6 @@ def build_llvm(configure=True, debug=False, install_dest=None, cores=8):
     cmake_cmd = [   'cmake', 
                     '-G', 
                     'Unix Makefiles',
-		            '-DCMAKE_OSX_ARCHITECTURES=arm64',
                     '-DLLVM_INSTALL_UTILS=true'
                     '-DLLVM_ENABLE_PROJECTS=lld;clang',
                     '-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2',
