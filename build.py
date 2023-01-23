@@ -24,7 +24,7 @@ def copy(src, dst, cwd=None, recurse=False):
 
     return True
 
-def build_llvm(configure=True, debug=False, install_dest=None):
+def build_llvm(configure=True, debug=False, install_dest=None, cores=8):
     '''
     if install_dest is None, then don't run install
     '''
@@ -38,7 +38,6 @@ def build_llvm(configure=True, debug=False, install_dest=None):
                     'Unix Makefiles',
 		            '-DCMAKE_OSX_ARCHITECTURES=arm64',
                     '-DLLVM_INSTALL_UTILS=true'
-                    '-DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm/bin/clang++',
                     '-DLLVM_ENABLE_PROJECTS=lld;clang',
                     '-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=P2',
                     '-DLLVM_TARGETS_TO_BUILD='
@@ -64,9 +63,9 @@ def build_llvm(configure=True, debug=False, install_dest=None):
 
     # build LLVM, optionally installing it
     if (install_dest):
-        p = subprocess.Popen(['make', 'install', '-j8'], cwd=build_dir)
+        p = subprocess.Popen(['make', 'install', '-j'+str(cores)], cwd=build_dir)
     else:
-        p = subprocess.Popen(['make', '-j8'], cwd=build_dir)
+        p = subprocess.Popen(['make', '-j'+str(cores)], cwd=build_dir)
 
     p.wait()
 
@@ -87,7 +86,7 @@ def build_llvm(configure=True, debug=False, install_dest=None):
 
     return True
 
-def build_libp2(install_dest, llvm, clean=False, configure=True):
+def build_libp2(install_dest, llvm, clean=False, configure=True, cores=8):
     build_dir = os.path.join(LIBP2_DIR, 'build')
     os.makedirs(build_dir, exist_ok=True)
 
@@ -109,7 +108,7 @@ def build_libp2(install_dest, llvm, clean=False, configure=True):
         if p.returncode != 0:
             return False
 
-    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j8'], cwd=build_dir)
+    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j'+str(cores)], cwd=build_dir)
     p.wait()
     if p.returncode != 0:
         return False
@@ -129,7 +128,7 @@ def build_libp2(install_dest, llvm, clean=False, configure=True):
 
     return True
 
-def build_libp2pp(install_dest, llvm, clean=False, configure=True):
+def build_libp2pp(install_dest, llvm, clean=False, configure=True, cores=8):
     build_dir = os.path.join(LIBP2PP_DIR, 'build')
     os.makedirs(build_dir, exist_ok=True)
 
@@ -150,7 +149,7 @@ def build_libp2pp(install_dest, llvm, clean=False, configure=True):
         if p.returncode != 0:
             return False
 
-    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j8'], cwd=build_dir)
+    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j'+str(cores)], cwd=build_dir)
     p.wait()
     if p.returncode != 0:
         return False
@@ -167,7 +166,7 @@ def build_libp2pp(install_dest, llvm, clean=False, configure=True):
 
     return True
 
-def build_libc(install_dest, llvm, clean=False, configure=True):
+def build_libc(install_dest, llvm, clean=False, configure=True, cores=8):
     build_dir = os.path.join(LIBC_DIR, 'build')
     os.makedirs(build_dir, exist_ok=True)
 
@@ -188,7 +187,7 @@ def build_libc(install_dest, llvm, clean=False, configure=True):
         if p.returncode != 0:
             return False
 
-    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j8'], cwd=build_dir)
+    p = subprocess.Popen(['make', 'LLVM=' + llvm, '-j'+str(cores)], cwd=build_dir)
     p.wait()
     if p.returncode != 0:
         return False
@@ -216,6 +215,7 @@ def main():
     parser.add_argument('--clean', nargs='?', const=True, default=False)
     parser.add_argument('--debug', nargs='?', const=True, default=False)
     parser.add_argument('--install', type=str, required=False)
+    parser.add_argument('--cores', type=integer, required=False)
     
     args = parser.parse_args()
 
@@ -226,6 +226,7 @@ def main():
     install_dest = args.install
     debug = args.debug
     clean = args.clean
+    cores = args.cores
 
     # set up build directory
     if (debug):
