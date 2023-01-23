@@ -215,7 +215,7 @@ def main():
     parser.add_argument('--clean', nargs='?', const=True, default=False)
     parser.add_argument('--debug', nargs='?', const=True, default=False)
     parser.add_argument('--install', type=str, required=False)
-    parser.add_argument('--cores', type=integer, required=False)
+    parser.add_argument('--cores', type=int, required=False)
     
     args = parser.parse_args()
 
