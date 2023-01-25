@@ -1,6 +1,7 @@
 import argparse
 import os
 import subprocess
+import sys
 
 DEBUG_BUILD_DIR = "llvm-project/build_debug"
 RELEASE_BUILD_DIR = "llvm-project/build_release"
@@ -241,7 +242,7 @@ def main():
     # build LLVM
     if not skip_llvm:
         if not build_llvm(configure, debug, install_dest):
-            return
+            sys.exit(1)
 
     # build libp2
     if not skip_libp2:
@@ -253,7 +254,7 @@ def main():
             r = build_libp2pp(build_dir, llvm, clean, configure)
 
         if not r:
-            return
+            sys.exit(1)
 
     # build libc
     if not skip_libc:
@@ -263,8 +264,8 @@ def main():
             r = build_libc(build_dir, llvm, clean, configure)
 
         if not r:
-            return
-
+            sys.exit(1)
+    sys.exit(0)
 
 if __name__ == "__main__":
     main();
