@@ -49,6 +49,7 @@ def build_llvm(configure=True, debug=False, install_dest=None, cores=8):
         cmake_cmd.append("-DCMAKE_BUILD_TYPE=" + "Release")
 
     if install_dest:
+        install_dest = string.replace("\","/") # ensure windows compatibility
         cmake_cmd.append("-DCMAKE_INSTALL_PREFIX=" + install_dest)
 
     cmake_cmd.append("../llvm")
