@@ -93,7 +93,7 @@ def build_libp2(install_dest, llvm, clean=False, configure=True, cores=8):
     # build libp2
 
     if configure:
-        cmake_cmd = ['cmake', '-Dllvm=' + os.path.normpath((os.path.join(install_dest, 'bin')), '../']
+        cmake_cmd = ['cmake', '-Dllvm=' + os.path.normpath(os.path.join(install_dest, 'bin')), '../']
 
         p = subprocess.Popen(cmake_cmd, cwd=build_dir)
         p.wait()
