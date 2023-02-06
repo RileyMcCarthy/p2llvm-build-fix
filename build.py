@@ -93,7 +93,7 @@ def build_libp2(install_dest, llvm, clean=False, configure=True, cores=8):
     # build libp2
 
     if configure:
-        cmake_cmd = ['cmake', '-Dllvm=' + str(os.path.join(install_dest, 'bin')), '../']
+        cmake_cmd = ['cmake', '-Dllvm=' + os.path.normpath((os.path.join(install_dest, 'bin')), '../']
 
         p = subprocess.Popen(cmake_cmd, cwd=build_dir)
         p.wait()
@@ -134,7 +134,7 @@ def build_libp2pp(install_dest, llvm, clean=False, configure=True, cores=8):
 
     # build libp2++
     if configure:
-        cmake_cmd = ['cmake', '-Dllvm=' + str(os.path.join(install_dest, 'bin')), '../']
+        cmake_cmd = ['cmake', '-Dllvm=' + os.path.normpath(os.path.join(install_dest, 'bin')), '../']
 
         p = subprocess.Popen(cmake_cmd, cwd=build_dir)
         p.wait()
@@ -172,7 +172,7 @@ def build_libc(install_dest, llvm, clean=False, configure=True, cores=8):
 
     # build libc
     if configure:
-        cmake_cmd = ['cmake', '-Dllvm=' + str(os.path.join(install_dest, 'bin')), '../']
+        cmake_cmd = ['cmake', '-Dllvm=' + os.path.normpath(os.path.join(install_dest, 'bin')), '../']
 
         p = subprocess.Popen(cmake_cmd, cwd=build_dir)
         p.wait()
@@ -227,10 +227,6 @@ def main():
     debug = args.debug
     clean = args.clean
     cores = args.cores
-                                  
-    # Remove backslashes for windows compatibility
-    if (install_dest):
-        install_dest = install_dest.replace("\\","/")
     
     # set up build directory
     if (debug):
